@@ -16,7 +16,7 @@ Product.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    tag_name: {
+    product_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -32,11 +32,12 @@ Product.init(
       allowNull: false,
       defaultValue: 10,
       validate: {
-        isNumber: true,
+        isNumeric: true,
       },
     },
     category_id: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       references: {
         model: "category",
         key: "id",

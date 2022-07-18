@@ -6,12 +6,55 @@ const { Product, Category, Tag, ProductTag } = require("../../models");
 // get all products
 router.get("/", (req, res) => {
   // find all products
+  console.log("======================");
+  console.log("\nGET /api/products  triggered\n");
+
+  Product.findAll({
+    include: [
+      {
+        model: Category,
+      },
+      {
+        model: Tag,
+        through: ProductTag,
+        as: "product_tags",
+      },
+    ],
+  })
+    .then((dbData) => {
+      return res.json(dbData);
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
   // be sure to include its associated Category and Tag data
 });
 
-// get one product
+//******* TODO::: get one product
 router.get("/:id", (req, res) => {
   // find a single product by its `id`
+  console.log("\nGET /api/categories/:id  triggered\n");
+  Product.findOne({
+    where: {
+      id: req.params.id,
+    },
+    include: [
+      {
+        model: Category,
+      },
+      {
+        model: Tag,
+        through: ProductTag,
+        as: "product_tags",
+      },
+    ],
+  })
+    .then((dbData) => {
+      return res.json(dbData);
+    })
+    .catch((error) => {
+      return res.status(500).json(error.message);
+    });
   // be sure to include its associated Category and Tag data
 });
 
@@ -91,6 +134,15 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: { id: req.params.id },
+  })
+    .then((dbData) => {
+      return res.json(dbData);
+    })
+    .catch((err) => {
+      return res.status(500).json(err.message);
+    });
 });
 
 module.exports = router;
